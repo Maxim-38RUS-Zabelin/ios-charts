@@ -21,9 +21,13 @@ public class LineChartDataSet: LineRadarChartDataSet
     public var circleHoleColor = UIColor.whiteColor()
     public var circleRadius = CGFloat(8.0)
 
-    public var circleImage: UIImage? = nil {
-        willSet {
-            if (newValue != nil) {
+    public var circleImage: UIImage? = nil
+    {
+        willSet
+        {
+            if (newValue != nil)
+            {
+                self.circleColors = []
                 self.drawCirclesEnabled = true
                 self.drawCircleHoleEnabled = false
             }
@@ -82,12 +86,13 @@ public class LineChartDataSet: LineRadarChartDataSet
     public func getCircleColor(var index: Int) -> UIColor?
     {
         let size = circleColors.count
-        index = index % size
-        if (index >= size)
+        if (size > 0)
         {
-            return nil
+            index = index % size
+            return (index >= size) ? nil : circleColors[index]
         }
-        return circleColors[index]
+
+        return nil
     }
     
     /// Sets the one and ONLY color that should be used for this DataSet.

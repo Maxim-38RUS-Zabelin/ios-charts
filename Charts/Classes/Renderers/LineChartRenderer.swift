@@ -539,24 +539,27 @@ public class LineChartRenderer: ChartDataRendererBase
                 {
                     continue
                 }
-                
-                CGContextSetFillColorWithColor(context, dataSet.getCircleColor(j)!.CGColor)
-                
-                rect.origin.x = pt.x - circleRadius
-                rect.origin.y = pt.y - circleRadius
-                rect.size.width = circleDiameter
-                rect.size.height = circleDiameter
-                CGContextFillEllipseInRect(context, rect)
-                
-                if (isDrawCircleHoleEnabled)
+
+                if let circleColor = dataSet.getCircleColor(j)
                 {
-                    CGContextSetFillColorWithColor(context, dataSet.circleHoleColor.CGColor)
-                    
-                    rect.origin.x = pt.x - circleHoleRadius
-                    rect.origin.y = pt.y - circleHoleRadius
-                    rect.size.width = circleHoleDiameter
-                    rect.size.height = circleHoleDiameter
+                    CGContextSetFillColorWithColor(context, circleColor.CGColor)
+
+                    rect.origin.x = pt.x - circleRadius
+                    rect.origin.y = pt.y - circleRadius
+                    rect.size.width = circleDiameter
+                    rect.size.height = circleDiameter
                     CGContextFillEllipseInRect(context, rect)
+                    
+                    if (isDrawCircleHoleEnabled)
+                    {
+                        CGContextSetFillColorWithColor(context, dataSet.circleHoleColor.CGColor)
+
+                        rect.origin.x = pt.x - circleHoleRadius
+                        rect.origin.y = pt.y - circleHoleRadius
+                        rect.size.width = circleHoleDiameter
+                        rect.size.height = circleHoleDiameter
+                        CGContextFillEllipseInRect(context, rect)
+                    }
                 }
 
                 if let circleImage = dataSet.circleImage {
