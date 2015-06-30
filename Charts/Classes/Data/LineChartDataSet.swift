@@ -20,6 +20,15 @@ public class LineChartDataSet: LineRadarChartDataSet
     public var circleColors = [UIColor]()
     public var circleHoleColor = UIColor.whiteColor()
     public var circleRadius = CGFloat(8.0)
+
+    public var circleImage: UIImage? = nil {
+        willSet {
+            if (newValue != nil) {
+                self.drawCirclesEnabled = false
+                self.drawCircleHoleEnabled = false
+            }
+        }
+    }
     
     private var _cubicIntensity = CGFloat(0.2)
     

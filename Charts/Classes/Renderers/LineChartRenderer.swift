@@ -567,6 +567,15 @@ public class LineChartRenderer: ChartDataRendererBase
                     rect.size.height = circleHoleDiameter;
                     CGContextFillEllipseInRect(context, rect);
                 }
+
+                if let circleImage = dataSet.circleImage {
+                    rect.origin.x = pt.x - circleImage.size.width / CGFloat(2.0)
+                    rect.origin.y = pt.y - circleImage.size.height / CGFloat(2.0)
+                    rect.size.width = circleImage.size.width
+                    rect.size.height = circleImage.size.height
+
+                    CGContextDrawImage(context, rect, circleImage.CGImage)
+                }
             }
         }
         
