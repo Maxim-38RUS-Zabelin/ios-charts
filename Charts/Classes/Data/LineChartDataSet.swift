@@ -24,7 +24,7 @@ public class LineChartDataSet: LineRadarChartDataSet
     public var circleImage: UIImage? = nil {
         willSet {
             if (newValue != nil) {
-                self.drawCirclesEnabled = false
+                self.drawCirclesEnabled = true
                 self.drawCircleHoleEnabled = false
             }
         }
