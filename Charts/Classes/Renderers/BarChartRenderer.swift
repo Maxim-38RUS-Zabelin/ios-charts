@@ -147,7 +147,16 @@ public class BarChartRenderer: ChartDataRendererBase
                 
                 // Set the color for the currently drawn value. If the index is out of bounds, reuse colors.
                 CGContextSetFillColorWithColor(context, dataSet.colorAt(j).CGColor)
-                CGContextFillRect(context, barRect)
+
+                if let (raundingCorners, cornerRadii) = self.calcRectCorners(y) {
+                    let path: UIBezierPath = UIBezierPath(roundedRect: barRect,
+                        byRoundingCorners: raundingCorners,
+                        cornerRadii: cornerRadii)
+                    path.fill()
+                }
+                else {
+                    CGContextFillRect(context, barRect)
+                }
             }
             else
             {
@@ -242,7 +251,16 @@ public class BarChartRenderer: ChartDataRendererBase
                     
                     // Set the color for the currently drawn value. If the index is out of bounds, reuse colors.
                     CGContextSetFillColorWithColor(context, dataSet.colorAt(k).CGColor)
-                    CGContextFillRect(context, barRect)
+
+                    if let (raundingCorners, cornerRadii) = self.calcRectCorners(y) {
+                        let path: UIBezierPath = UIBezierPath(roundedRect: barRect,
+                            byRoundingCorners: raundingCorners,
+                            cornerRadii: cornerRadii)
+                        path.fill()
+                    }
+                    else {
+                        CGContextFillRect(context, barRect)
+                    }
                 }
             }
         }
@@ -308,7 +326,9 @@ public class BarChartRenderer: ChartDataRendererBase
                     posOffset = -posOffset - valueTextHeight
                     negOffset = -negOffset - valueTextHeight
                 }
-                
+
+                self.modifyValuesOffsets(&posOffset, negOffset: &negOffset)
+
                 var valueTextColor = dataSet.valueTextColor
                 
                 var formatter = dataSet.valueFormatter
@@ -568,5 +588,14 @@ public class BarChartRenderer: ChartDataRendererBase
         }
         
         return CGFloat(barData.yValCount) < CGFloat(delegate!.barChartRendererMaxVisibleValueCount(self)) * viewPortHandler.scaleX
+    }
+
+    public func calcRectCorners(y: Double) -> (raundingCorners: UIRectCorner, cornerRadii: CGSize)?
+    {
+        return nil
+    }
+
+    public func modifyValuesOffsets(inout posOffset: CGFloat, inout negOffset: CGFloat)
+    {
     }
 }
