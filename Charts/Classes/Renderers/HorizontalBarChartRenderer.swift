@@ -103,12 +103,29 @@ public class HorizontalBarChartRenderer: BarChartRenderer
                     barShadow.size.height = barRect.size.height
                     
                     CGContextSetFillColorWithColor(context, dataSet.barShadowColor.CGColor)
-                    CGContextFillRect(context, barShadow)
+                    if let (raundingCorners, cornerRadii) = self.calcShadowRectCorners() {
+                        let path: UIBezierPath = UIBezierPath(roundedRect: barShadow,
+                            byRoundingCorners: raundingCorners,
+                            cornerRadii: cornerRadii)
+                        path.fill()
+                    }
+                    else {
+                        CGContextFillRect(context, barShadow)
+                    }
                 }
                 
                 // Set the color for the currently drawn value. If the index is out of bounds, reuse colors.
                 CGContextSetFillColorWithColor(context, dataSet.colorAt(j).CGColor)
-                CGContextFillRect(context, barRect)
+                if let (raundingCorners, cornerRadii) = self.calcRectCorners(y) {
+                    let path: UIBezierPath = UIBezierPath(
+                        roundedRect: barRect,
+                        byRoundingCorners: raundingCorners,
+                        cornerRadii: cornerRadii)
+                    path.fill()
+                }
+                else {
+                    CGContextFillRect(context, barRect)
+                }
             }
             else
             {
@@ -148,7 +165,15 @@ public class HorizontalBarChartRenderer: BarChartRenderer
                     barShadow.size.height = barRect.size.height
                     
                     CGContextSetFillColorWithColor(context, dataSet.barShadowColor.CGColor)
-                    CGContextFillRect(context, barShadow)
+                    if let (raundingCorners, cornerRadii) = self.calcShadowRectCorners() {
+                        let path: UIBezierPath = UIBezierPath(roundedRect: barShadow,
+                            byRoundingCorners: raundingCorners,
+                            cornerRadii: cornerRadii)
+                        path.fill()
+                    }
+                    else {
+                        CGContextFillRect(context, barShadow)
+                    }
                 }
                 
                 // fill the stack
@@ -203,7 +228,16 @@ public class HorizontalBarChartRenderer: BarChartRenderer
                     
                     // Set the color for the currently drawn value. If the index is out of bounds, reuse colors.
                     CGContextSetFillColorWithColor(context, dataSet.colorAt(k).CGColor)
-                    CGContextFillRect(context, barRect)
+                    if let (raundingCorners, cornerRadii) = self.calcRectCorners(y) {
+                        let path: UIBezierPath = UIBezierPath(
+                            roundedRect: barRect,
+                            byRoundingCorners: raundingCorners,
+                            cornerRadii: cornerRadii)
+                        path.fill()
+                    }
+                    else {
+                        CGContextFillRect(context, barRect)
+                    }
                 }
             }
         }
@@ -313,7 +347,9 @@ public class HorizontalBarChartRenderer: BarChartRenderer
                             posOffset = -posOffset - valueTextWidth
                             negOffset = -negOffset - valueTextWidth
                         }
-                        
+
+                        self.modifyValuesOffsets(&posOffset, negOffset: &negOffset, valueTextWidth: valueTextWidth, valuePoint: valuePoints[j])
+
                         drawValue(
                             context: context,
                             value: valueText,
@@ -365,7 +401,9 @@ public class HorizontalBarChartRenderer: BarChartRenderer
                                 posOffset = -posOffset - valueTextWidth
                                 negOffset = -negOffset - valueTextWidth
                             }
-                            
+
+                            self.modifyValuesOffsets(&posOffset, negOffset: &negOffset, valueTextWidth: valueTextWidth, valuePoint: valuePoints[j])
+
                             drawValue(
                                 context: context,
                                 value: valueText,
@@ -417,7 +455,9 @@ public class HorizontalBarChartRenderer: BarChartRenderer
                                     posOffset = -posOffset - valueTextWidth
                                     negOffset = -negOffset - valueTextWidth
                                 }
-                                
+
+                                self.modifyValuesOffsets(&posOffset, negOffset: &negOffset, valueTextWidth: valueTextWidth, valuePoint: valuePoints[j])
+
                                 var x = transformed[k].x + (val >= 0 ? posOffset : negOffset)
                                 var y = valuePoints[j].y
                                 
@@ -461,5 +501,14 @@ public class HorizontalBarChartRenderer: BarChartRenderer
         }
         
         return CGFloat(barData.yValCount) < CGFloat(delegate!.barChartRendererMaxVisibleValueCount(self)) * viewPortHandler.scaleY
+    }
+
+    public func modifyValuesOffsets(inout posOffset: CGFloat, inout negOffset: CGFloat, valueTextWidth: CGFloat, valuePoint: CGPoint)
+    {
+    }
+
+    public func calcShadowRectCorners() -> (raundingCorners: UIRectCorner, cornerRadii: CGSize)?
+    {
+        return nil
     }
 }
