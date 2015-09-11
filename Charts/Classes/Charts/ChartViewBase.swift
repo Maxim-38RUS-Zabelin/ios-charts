@@ -471,15 +471,20 @@ public class ChartViewBase: UIView, ChartAnimatorDelegate
                 // callbacks to update the content
                 marker!.refreshContent(entry: e!, dataSetIndex: dataSetIndex)
 
+                let chartRectOffsetLeft = self.viewPortHandler.offsetLeft
+                let chartRectOffsetBottom = self.viewPortHandler.offsetBottom
+
                 let markerSize = marker!.size
                 if (pos.y - markerSize.height <= 0.0)
                 {
                     let y = markerSize.height - pos.y
-                    marker!.draw(context: context, point: CGPoint(x: pos.x, y: pos.y + y))
+                    marker!.draw(context: context, point: CGPoint(x: pos.x, y: pos.y + y),
+                        chartRectOffsetLeft: chartRectOffsetLeft, chartRectOffsetBottom: chartRectOffsetBottom)
                 }
                 else
                 {
-                    marker!.draw(context: context, point: pos)
+                    marker!.draw(context: context, point: pos,
+                        chartRectOffsetLeft: chartRectOffsetLeft, chartRectOffsetBottom: chartRectOffsetBottom)
                 }
             }
         }

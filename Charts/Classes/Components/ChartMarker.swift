@@ -37,7 +37,7 @@ public class ChartMarker: ChartComponentBase
     }
     
     /// Draws the ChartMarker on the given position on the given context
-    public func draw(#context: CGContext, point: CGPoint)
+    public func draw(#context: CGContext, point: CGPoint, chartRectOffsetLeft: CGFloat, chartRectOffsetBottom: CGFloat)
     {
         var offset = self.offset
         var size = self.size
