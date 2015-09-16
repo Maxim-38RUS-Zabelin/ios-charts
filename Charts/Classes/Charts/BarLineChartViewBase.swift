@@ -524,7 +524,9 @@ public class BarLineChartViewBase: ChartViewBase, UIGestureRecognizerDelegate
     private var _decelerationLastTime: NSTimeInterval = 0.0
     private var _decelerationDisplayLink: CADisplayLink!
     private var _decelerationVelocity = CGPoint()
-    
+
+    public var showHighlightsForAllDataSets: Bool = false
+
     @objc private func tapGestureRecognized(recognizer: UITapGestureRecognizer)
     {
         if (_dataNotSet)
@@ -544,7 +546,16 @@ public class BarLineChartViewBase: ChartViewBase, UIGestureRecognizerDelegate
             else
             {
                 self.lastHighlighted = h
-                self.highlightValue(highlight: h, callDelegate: true)
+                if self.showHighlightsForAllDataSets {
+                    var hs: [ChartHighlight] = []
+                    for i in 0..<(self.data?.dataSets.count ?? 0) {
+                        hs.append(ChartHighlight(xIndex: h!.xIndex, dataSetIndex: i))
+                        }
+                    self.highlightValues(hs)
+                }
+                else {
+                    self.highlightValue(highlight: h, callDelegate: true)
+                }
             }
         }
     }
@@ -715,7 +726,16 @@ public class BarLineChartViewBase: ChartViewBase, UIGestureRecognizerDelegate
                     (h !== nil && lastHighlighted !== nil && !h!.isEqual(lastHighlighted)))
                 {
                     self.lastHighlighted = h
-                    self.highlightValue(highlight: h, callDelegate: true)
+                    if self.showHighlightsForAllDataSets {
+                        var hs: [ChartHighlight] = []
+                        for i in 0..<(self.data?.dataSets.count ?? 0) {
+                            hs.append(ChartHighlight(xIndex: h!.xIndex, dataSetIndex: i))
+                        }
+                        self.highlightValues(hs)
+                    }
+                    else {
+                        self.highlightValue(highlight: h, callDelegate: true)
+                    }
                 }
             }
         }
