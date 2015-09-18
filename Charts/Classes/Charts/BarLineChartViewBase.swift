@@ -726,7 +726,7 @@ public class BarLineChartViewBase: ChartViewBase, UIGestureRecognizerDelegate
                     (h !== nil && lastHighlighted !== nil && !h!.isEqual(lastHighlighted)))
                 {
                     self.lastHighlighted = h
-                    if self.showHighlightsForAllDataSets {
+                    if self.showHighlightsForAllDataSets && h != nil {
                         var hs: [ChartHighlight] = []
                         for i in 0..<(self.data?.dataSets.count ?? 0) {
                             hs.append(ChartHighlight(xIndex: h!.xIndex, dataSetIndex: i))
