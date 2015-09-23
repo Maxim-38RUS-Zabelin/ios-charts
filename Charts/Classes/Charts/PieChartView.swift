@@ -469,4 +469,56 @@ public class PieChartView: PieRadarChartViewBase
             setNeedsDisplay()
         }
     }
+
+    public var frameInnerRadiusPercent: CGFloat
+    {
+        get
+        {
+            return (renderer as! PieChartRenderer).frameInnerRadiusPercent
+        }
+        set
+        {
+            (renderer as! PieChartRenderer).frameInnerRadiusPercent = newValue
+            setNeedsDisplay()
+        }
+    }
+
+    public var frameOuterRadiusPercent: CGFloat
+    {
+        get
+        {
+            return (renderer as! PieChartRenderer).frameOuterRadiusPercent
+        }
+        set
+        {
+            (renderer as! PieChartRenderer).frameOuterRadiusPercent = newValue
+            setNeedsDisplay()
+        }
+    }
+
+    public var holeTransparentColor: UIColor?
+    {
+        get
+        {
+            return (renderer as! PieChartRenderer).holeTransparentColor
+        }
+        set
+        {
+            (renderer as! PieChartRenderer).holeTransparentColor = newValue
+            setNeedsDisplay()
+        }
+    }
+
+    public var holeInHoleRadiusPercent: CGFloat
+        {
+        get
+        {
+            return (renderer as! PieChartRenderer).holeInHoleRadiusPercent
+        }
+        set
+        {
+            (renderer as! PieChartRenderer).holeInHoleRadiusPercent = newValue
+            setNeedsDisplay()
+        }
+    }
 }
