@@ -32,7 +32,13 @@ public class PieChartRenderer: ChartDataRendererBase
     public var drawCenterTextEnabled = true
     public var centerTextLineBreakMode = NSLineBreakMode.ByTruncatingTail
     public var centerTextRadiusPercent: CGFloat = 1.0
-    
+
+    public var frameInnerRadiusPercent = CGFloat(0.0)
+    public var frameOuterRadiusPercent = CGFloat(0.0)
+
+    public var holeInHoleRadiusPercent = CGFloat(0.0)
+    public var holeTransparentColor: UIColor? = nil
+
     public init(chart: PieChartView, animator: ChartAnimator?, viewPortHandler: ChartViewPortHandler)
     {
         super.init(animator: animator, viewPortHandler: viewPortHandler)
@@ -72,7 +78,23 @@ public class PieChartRenderer: ChartDataRendererBase
         var innerRadius = drawHoleEnabled && holeTransparent ? radius * holeRadiusPercent : 0.0
         
         CGContextSaveGState(context)
-        
+
+        var center = _chart.centerCircleBox
+
+        if self.frameOuterRadiusPercent > 1 {
+            var r2 = _chart.radius * self.frameOuterRadiusPercent
+
+            CGContextSetFillColorWithColor(context, UIColor(red: 0.96, green: 0.96, blue: 0.96, alpha: 1).CGColor)
+            CGContextFillEllipseInRect(context, CGRect(x: center.x - r2, y: center.y - r2, width: r2 * 2.0, height: r2 * 2.0))
+        }
+
+        if self.frameInnerRadiusPercent > 1 {
+            var r1 = _chart.radius * self.frameInnerRadiusPercent
+
+            CGContextSetFillColorWithColor(context, UIColor.whiteColor().CGColor)
+            CGContextFillEllipseInRect(context, CGRect(x: center.x - r1, y: center.y - r1, width: r1 * 2.0, height: r1 * 2.0))
+        }
+
         for (var j = 0; j < entries.count; j++)
         {
             var newangle = drawAngles[cnt]
@@ -236,25 +258,35 @@ public class PieChartRenderer: ChartDataRendererBase
             var radius = _chart.radius
             var holeRadius = radius * holeRadiusPercent
             var center = _chart.centerCircleBox
-            
+
+            if (transparentCircleRadiusPercent > holeRadiusPercent)
+            {
+                var secondHoleRadius = radius * transparentCircleRadiusPercent
+
+                if self.holeTransparentColor == nil {
+                    self.holeTransparentColor = self.holeColor?.colorWithAlphaComponent(CGFloat(0x60) / CGFloat(0xFF))
+                }
+
+                // make transparent
+                CGContextSetFillColorWithColor(context, self.holeTransparentColor!.CGColor)
+
+                // draw the transparent-circle
+                CGContextFillEllipseInRect(context, CGRect(x: center.x - secondHoleRadius, y: center.y - secondHoleRadius, width: secondHoleRadius * 2.0, height: secondHoleRadius * 2.0))
+            }
+
             if (holeColor !== nil && holeColor != UIColor.clearColor())
             {
                 // draw the hole-circle
                 CGContextSetFillColorWithColor(context, holeColor!.CGColor)
                 CGContextFillEllipseInRect(context, CGRect(x: center.x - holeRadius, y: center.y - holeRadius, width: holeRadius * 2.0, height: holeRadius * 2.0))
+
+                if self.holeInHoleRadiusPercent > 0 {
+                    let r = radius * self.holeInHoleRadiusPercent
+                    CGContextSetFillColorWithColor(context, UIColor(red: 0.898, green: 0.898, blue: 0.898, alpha: 1).CGColor)
+                    CGContextFillEllipseInRect(context, CGRect(x: center.x - r, y: center.y - r, width: r * 2.0, height: r * 2.0))
+                }
             }
-            
-            if (transparentCircleRadiusPercent > holeRadiusPercent)
-            {
-                var secondHoleRadius = radius * transparentCircleRadiusPercent
-                
-                // make transparent
-                CGContextSetFillColorWithColor(context, holeColor!.colorWithAlphaComponent(CGFloat(0x60) / CGFloat(0xFF)).CGColor)
-                
-                // draw the transparent-circle
-                CGContextFillEllipseInRect(context, CGRect(x: center.x - secondHoleRadius, y: center.y - secondHoleRadius, width: secondHoleRadius * 2.0, height: secondHoleRadius * 2.0))
-            }
-            
+
             CGContextRestoreGState(context)
         }
     }
