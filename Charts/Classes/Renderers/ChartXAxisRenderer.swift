@@ -155,8 +155,15 @@ public class ChartXAxisRenderer: ChartAxisRendererBase
             position.x = CGFloat(i)
             position.y = 0.0
             position = CGPointApplyAffineTransform(position, valueToPixelMatrix)
-            
-            if (viewPortHandler.isInBoundsX(position.x))
+
+            let labelWidth: CGFloat = {
+                let uiLabel = UILabel()
+                uiLabel.attributedText = NSAttributedString(string: label!, attributes: labelAttrs)
+                let size = uiLabel.sizeThatFits(CGSize(width: CGFloat.max, height: CGFloat.max))
+                return size.width
+            }()
+
+            if (viewPortHandler.isInBoundsX(position.x + labelWidth))
             {
                 var labelns = label! as NSString
                 
